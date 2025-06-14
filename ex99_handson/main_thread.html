@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>メインスレッドでの重い処理（particles.js版）</title>
+    <!-- BootstrapのCDNを読み込み -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <!-- カスタムスタイル -->
+    <style>
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background-color: #2b2e3b;
+        color: #ffffff;
+      }
+      #particles-js {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+      }
+      .content {
+        position: relative;
+        z-index: 1;
+        padding: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="particles-js"></div>
+
+    <div class="content container">
+      <h1 class="mb-4">メインスレッドでの重い処理</h1>
+      <div class="mb-4">
+        <button id="startButton" class="btn btn-primary">重い処理を開始</button>
+        <button id="checkButton" class="btn btn-secondary">
+          UIの応答を確認
+        </button>
+      </div>
+      <div id="result" class="mt-4"></div>
+    </div>
+
+    <!-- particles.jsの読み込み（CDNを使用） -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+    <script>
+      particlesJS("particles-js", {
+        particles: { opacity: { value: 0.25 }, size: { value: 1 } },
+      });
+
+      function heavyComputation() {
+        document.getElementById("result").textContent = "処理実行中です";
+        let limit = 15000000;
+        let primes = [];
+        for (let i = 2; i <= limit; i++) {
+          let isPrime = true;
+          for (let j = 2; j <= Math.sqrt(i); j++) {
+            if (i % j === 0) {
+              isPrime = false;
+              break;
+            }
+          }
+          if (isPrime) {
+            primes.push(i);
+          }
+        }
+        document.getElementById("result").textContent =
+          "素数の数: " + primes.length;
+      }
+
+      document.getElementById("startButton").addEventListener("click", () => {
+        heavyComputation();
+      });
+
+      document.getElementById("checkButton").addEventListener("click", () => {
+        alert("UIはまだ反応しています");
+      });
+    </script>
+  </body>
+</html>
